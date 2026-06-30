@@ -597,6 +597,30 @@
             background: rgba(0,0,0,0.4);
             border-top: 1px solid rgba(212,175,106,0.2);
         }
+        .cart-customer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .cart-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(212,175,106,0.3);
+            border-radius: 6px;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            color-scheme: dark;
+        }
+        .cart-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(0,0,0,0.5);
+        }
+        .cart-input::placeholder { color: var(--text-muted); }
         .cart-total-row {
             display: flex;
             justify-content: space-between;
@@ -795,6 +819,10 @@
             <div class="cart-empty-msg">Tu carrito está vacío. Agrega artículos del catálogo.</div>
         </div>
         <div class="cart-footer">
+            <div class="cart-customer-info">
+                <input type="text" id="cart-client-name" placeholder="Tu Nombre o Empresa" class="cart-input">
+                <input type="date" id="cart-event-date" class="cart-input" title="Fecha del Evento">
+            </div>
             <div class="cart-total-row">
                 <span class="cart-total-label">Total Estimado:</span>
                 <span class="cart-total-value" id="cart-total-display">$0</span>
@@ -1093,7 +1121,15 @@
             const itemNames = Object.keys(cart);
             if(itemNames.length === 0) return;
             
-            let message = "Hola Festejos Santaella, deseo solicitar una cotización formal para los siguientes artículos de alquiler:%0A%0A";
+            const clientName = document.getElementById('cart-client-name').value.trim();
+            const eventDate = document.getElementById('cart-event-date').value;
+
+            if (!clientName || !eventDate) {
+                alert("Por favor, ingresa tu nombre y la fecha del evento para continuar con la cotización.");
+                return;
+            }
+            
+            let message = `Hola Festejos Santaella, soy ${clientName}. Deseo solicitar una cotización formal para un evento el día ${eventDate}. Estos son los artículos de alquiler:%0A%0A`;
             
             let total = 0;
             itemNames.forEach(name => {
