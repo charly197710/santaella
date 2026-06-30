@@ -1136,6 +1136,14 @@ img {
 /* ==========================================================================
    GALERIA SECTION (LIGHTBOX + HOVERS)
    ========================================================================== */
+
+.other-services-section {
+    padding: 8rem 0;
+    background-color: var(--black);
+    position: relative;
+    z-index: 10;
+}
+
 .gallery-section {
     padding: 8rem 0;
     position: relative;
