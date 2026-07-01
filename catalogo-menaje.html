@@ -777,12 +777,13 @@
                 <button class="filter-btn" data-cat="manteleria">Mantelería</button>
                 <button class="filter-btn" data-cat="sillas">Sillas y Mesas</button>
                 <button class="filter-btn" data-cat="otros">Otros</button>
+                <button class="filter-btn" data-cat="diversion">Diversión y Luces</button>
             </div>
         </div>
 
         <!-- INFO RESULTADOS -->
         <div class="results-info">
-            <p class="results-count">Mostrando <span id="count-visible">41</span> de <span>41</span> artículos</p>
+            <p class="results-count">Mostrando <span id="count-visible">46</span> de <span>46</span> artículos</p>
             <p class="total-display"><i class="fa fa-tag"></i> Precios en pesos colombianos (COP) por unidad</p>
         </div>
 
@@ -887,11 +888,11 @@
             { name: "Pocillos",                      price: 600,   cat: "otros",      icon: "fa-mug-hot" },
             { name: "Tazas",                         price: 600,   cat: "otros",      icon: "fa-mug-hot" },
             { name: "Samovar de 12 Litros",          price: 35000, cat: "otros",      icon: "fa-fire" },
-            { name: "Bolira Rana (sin transporte)",   price: 150000,cat: "otros",      icon: "fa-gamepad" },
-            { name: "Cartones de Bingo (40 tableros y control manual)", price: 45000, cat: "otros", icon: "fa-ticket" },
-            { name: "Set fotográfico",               price: 180000,cat: "otros",      icon: "fa-camera" },
-            { name: "Luces led con cercha",          price: 200000,cat: "otros",      icon: "fa-lightbulb" },
-            { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "otros", icon: "fa-font" },
+            { name: "Bolira Rana (sin transporte)",   price: 150000,cat: "diversion",  icon: "fa-gamepad" },
+            { name: "Cartones de Bingo (40 tableros y control manual)", price: 45000, cat: "diversion", icon: "fa-ticket" },
+            { name: "Set fotográfico",               price: 180000,cat: "diversion",  icon: "fa-camera" },
+            { name: "Luces led con cercha",          price: 200000,cat: "diversion",  icon: "fa-lightbulb" },
+            { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "diversion", icon: "fa-font" },
         ];
 
         const catLabels = {
@@ -900,7 +901,8 @@
             cristaleria: "Cristalería",
             manteleria: "Mantelería y Forros",
             sillas: "Sillas, Mesas y Mobiliario",
-            otros: "Jarras, Bandejas y Extras"
+            otros: "Jarras, Bandejas y Extras",
+            diversion: "Diversión y Luces"
         };
 
         const catIcons = {
@@ -909,7 +911,8 @@
             cristaleria: "fa-wine-glass",
             manteleria: "fa-table",
             sillas: "fa-chair",
-            otros: "fa-box-open"
+            otros: "fa-box-open",
+            diversion: "fa-champagne-glasses"
         };
 
         function formatPrice(n) {
@@ -926,7 +929,7 @@
                 groups[item.cat].push(item);
             });
 
-            const catOrder = ['vajilla','cubiertos','cristaleria','manteleria','sillas','otros'];
+            const catOrder = ['vajilla','cubiertos','cristaleria','manteleria','sillas','otros','diversion'];
             catOrder.forEach(cat => {
                 if (!groups[cat] || groups[cat].length === 0) return;
 
