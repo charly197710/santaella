@@ -2454,12 +2454,23 @@ img {
     font-weight: 800;
     text-transform: uppercase;
     margin-right: 5px;
+    display: inline-block;
+    animation: badgeHeartbeat 2s infinite ease-in-out;
 }
 
 @keyframes pulseIcon {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
+    0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(212,175,106,0)); }
+    50% { transform: scale(1.25); filter: drop-shadow(0 0 8px rgba(212,175,106,0.8)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(212,175,106,0)); }
+}
+
+@keyframes badgeHeartbeat {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 106, 0.7); }
+    15% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(212, 175, 106, 0); }
+    30% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 106, 0.7); }
+    45% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(212, 175, 106, 0); }
+    60% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 106, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 106, 0); }
 }
 
 @media screen and (max-width: 768px) {
