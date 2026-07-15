@@ -318,7 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
         precios: "💰 En Festejos Santaella no manejamos tarifas estándar ni precios fijos. Cada evento es diseñado a la medida de tus sueños. Te invitamos a usar el **Curador de Momentos** en nuestra web para seleccionar los servicios que deseas y enviar la cotización a WhatsApp, donde te brindaremos un presupuesto personalizado.",
         bodas: "✨ Nuestras **Bodas de Fantasía** se organizan en nuestra sede campestre. El plan básico incluye montaje de gala, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
         quince: "👑 Para **Quinceaños**, diseñamos noches mágicas en nuestra sede campestre. El plan básico incluye montaje de gala, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
-        grados: "🎓 Organizamos **Grados, Proms y Eventos Empresariales**. El plan básico incluye montaje de gala en sede campestre, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL."
+        grados: "🎓 Organizamos **Grados, Proms y Eventos Empresariales**. El plan básico incluye montaje de gala en sede campestre, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
+        seguridad: "⚠️ **AVISO IMPORTANTE DE SEGURIDAD:** Para proteger a nuestros clientes de fraudes y clonación de información, en Festejos Santaella **NUNCA** solicitamos transferencias bancarias, depósitos digitales o consignaciones. Cualquier abono, separación de fecha o pago de contrato se realiza **únicamente de forma presencial en nuestra oficina** (Carrera 13 N° 9 - 40, Segundo Piso, Funza). ¡No caigas en estafas!"
     };
 
     function appendMessage(text, sender) {
@@ -402,6 +403,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchedKey = 'quince';
             } else if (text.includes('grado') || text.includes('prom') || text.includes('colegio')) {
                 matchedKey = 'grados';
+            } else if (text.includes('pagar') || text.includes('consignar') || text.includes('cuenta') || text.includes('abono') || text.includes('transferencia') || text.includes('consignacion') || text.includes('fraude') || text.includes('estafa') || text.includes('banco') || text.includes('separar')) {
+                matchedKey = 'seguridad';
             }
 
             let botReply = '';
