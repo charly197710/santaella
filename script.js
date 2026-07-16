@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarAlert = document.getElementById('calendar-alert');
     const calendarAlertText = document.getElementById('calendar-alert-text');
 
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_b9mHlV4yvR4d255-t1L1mX9Fm-YOUR-SCRIPT-URL/exec'; // Reemplazar con la URL de la web app publicada
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxtdGTmBqLbgMCCZ_YAmwjwNmhLPBIpIOvqb627j6_QCZGFfNeGIaLC8gkqSpqfLpg/exec'; // Reemplazar con la URL de la web app publicada
     const summaryServices = document.getElementById('summary-services-list');
     const summaryGifts = document.getElementById('summary-gifts-text');
     const btnAddToCart = document.getElementById('btn-add-to-cart');
