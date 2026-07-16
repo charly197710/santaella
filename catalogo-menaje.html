@@ -947,9 +947,9 @@
             <span class="section-tag">¿Listo para tu evento?</span>
             <h3>Solicita tu Cotización Ahora</h3>
             <p>Cuéntanos qué artículos necesitas y cuántos, y te enviamos una propuesta completa de inmediato.</p>
-            <a href="https://wa.me/573227580494?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20menaje%20y%20quisiera%20solicitar%20una%20cotizaci%C3%B3n%20para%20mi%20evento." target="_blank" class="btn-wa">
+            <button id="btn-cta-wa" class="btn-wa" style="border: none; cursor: pointer;">
                 <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
-            </a>
+            </button>
         </div>
     </main>
 
@@ -1342,6 +1342,12 @@
                 document.getElementById('security-modal').classList.remove('active');
                 pendingWaMessage = null;
             }
+        });
+
+        // Botón CTA de WhatsApp (sección inferior) → también pasa por el modal
+        document.getElementById('btn-cta-wa').addEventListener('click', () => {
+            pendingWaMessage = 'Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20menaje%20y%20quisiera%20solicitar%20una%20cotizaci%C3%B3n%20para%20mi%20evento.';
+            document.getElementById('security-modal').classList.add('active');
         });
     </script>
 </body>
