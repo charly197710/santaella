@@ -269,6 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
                           `• *Invitados:* ${guests} personas\n` +
                           `• *Fecha tentativa:* ${dateVal}\n` +
                           `• *Sede:* Sede Campestre Santaella\n\n` +
+                          `⚠️ *AVISO DE SEGURIDAD IMPORTANTE:*\n` +
+                          `Todo anticipo, separación de fecha o pago de contrato se realiza ÚNICAMENTE de forma presencial en nuestra oficina. Festejos Santaella NO solicita consignaciones ni transferencias bancarias a través de WhatsApp ni canales digitales.\n\n` +
                           `*Servicio Principal:*\n` +
                           `✓ Paquete Básico de ${eventConfig[type].title} (Incluye Obsequio Especial)\n`;
 
