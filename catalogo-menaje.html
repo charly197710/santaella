@@ -883,6 +883,52 @@
             from { transform: scale(1); filter: drop-shadow(0 0 2px rgba(231,76,60,0.5)); }
             to { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(231,76,60,0.8)); }
         }
+
+        /* Animación GIF para Flyer */
+        @keyframes flyerFade {
+            0%, 45% { opacity: 1; }
+            55%, 95% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .flyer-img-container {
+            position: relative;
+            width: 100%;
+            padding-top: 145%; /* Aspect ratio of flyers */
+            background: #000;
+            border-bottom: 2px solid var(--gold);
+        }
+        .flyer-img-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+        .flyer-img-container img.layer-top {
+            animation: flyerFade 3s infinite;
+        }
+        .catalog-card.flyer-card {
+            padding: 0;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 20px rgba(212,175,106,0.2);
+        }
+        .flyer-card .card-actions {
+            padding: 15px;
+        }
+        .flyer-card .card-name {
+            padding: 10px 15px 0;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .flyer-card .card-price {
+            padding: 5px 15px 10px;
+            text-align: center;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -1059,8 +1105,7 @@
             { name: "Set fotográfico",               price: 180000,cat: "diversion",  icon: "fa-camera" },
             { name: "Luces led con cercha",          price: 200000,cat: "diversion",  icon: "fa-lightbulb" },
             { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "diversion", icon: "fa-font" },
-            { name: "Rx Recocha Exprés - Misión Sorpresa (Bolirana + Cilindros + Luces + Fondo)", price: 320000, cat: "diversion", icon: "fa-gamepad" },
-            { name: "Rx Recocha Exprés - Misión Recuerdo (Misión Sorpresa + Álbum fotos)", price: 450000, cat: "diversion", icon: "fa-camera" },
+            { name: "Rx Recocha Exprés - Misión Sorpresa (Bolirana + Cilindros + Luces + Fondo)", price: 320000, cat: "diversion", icon: "fa-gamepad", isAnimatedFlyer: true }
         ];
 
         const catLabels = {
@@ -1115,29 +1160,53 @@
                     const safeName = item.name.replace(/'/g, "\\'");
                     const inputId = 'qty-' + item.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
 
-                    card.innerHTML = `
-                        <div class="card-top-content">
-                            <div class="card-icon"><i class="fa ${item.icon}"></i></div>
-                            <div class="card-info">
-                                <div class="card-category">${catLabels[item.cat]}</div>
-                                <div class="card-name">${item.name}</div>
+                    if (item.isAnimatedFlyer) {
+                        card.classList.add('flyer-card');
+                        card.innerHTML = `
+                            <div class="flyer-img-container">
+                                <img src="assets/rx_recocha_1.jpg" alt="Rx Recocha Expres">
+                                <img src="assets/rx_recocha_2.jpg" alt="Rx Recocha Expres Detalles" class="layer-top">
                             </div>
+                            <div class="card-name" style="color:var(--gold); margin-bottom: 5px;">${item.name}</div>
                             <div class="card-price">
-                                <span class="price-label">Valor</span>
-                                <div class="price-value">${formatPrice(item.price)}</div>
-                                <span class="price-unit">/ unidad</span>
+                                <div class="price-value" style="font-size:1.5rem;">${formatPrice(item.price)}</div>
+                                <span class="price-unit">/ paquete completo</span>
                             </div>
-                        </div>
-                        <div class="card-actions">
-                            <div class="qty-input-wrapper">
-                                <button type="button" onclick="changeInputValue(this, -1)">-</button>
-                                <input type="number" min="1" value="10" class="item-qty-input" id="${inputId}">
-                                <button type="button" onclick="changeInputValue(this, 1)">+</button>
+                            <div class="card-actions">
+                                <div class="qty-input-wrapper">
+                                    <button type="button" onclick="changeInputValue(this, -1)">-</button>
+                                    <input type="number" min="1" value="1" class="item-qty-input" id="${inputId}">
+                                    <button type="button" onclick="changeInputValue(this, 1)">+</button>
+                                </div>
+                                <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
+                                    <i class="fa fa-cart-plus"></i> Añadir Paquete
+                                </button>
+                            </div>`;
+                    } else {
+                        card.innerHTML = `
+                            <div class="card-top-content">
+                                <div class="card-icon"><i class="fa ${item.icon}"></i></div>
+                                <div class="card-info">
+                                    <div class="card-category">${catLabels[item.cat]}</div>
+                                    <div class="card-name">${item.name}</div>
+                                </div>
+                                <div class="card-price">
+                                    <span class="price-label">Valor</span>
+                                    <div class="price-value">${formatPrice(item.price)}</div>
+                                    <span class="price-unit">/ unidad</span>
+                                </div>
                             </div>
-                            <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
-                                <i class="fa fa-cart-plus"></i> Añadir
-                            </button>
-                        </div>`;
+                            <div class="card-actions">
+                                <div class="qty-input-wrapper">
+                                    <button type="button" onclick="changeInputValue(this, -1)">-</button>
+                                    <input type="number" min="1" value="10" class="item-qty-input" id="${inputId}">
+                                    <button type="button" onclick="changeInputValue(this, 1)">+</button>
+                                </div>
+                                <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
+                                    <i class="fa fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>`;
+                    }
                     grid.appendChild(card);
                 });
             });
