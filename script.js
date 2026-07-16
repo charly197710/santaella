@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. INTERACTIVE EVENT CALCULATOR (CURADOR DE MOMENTOS)
     const eventSelect = document.getElementById('event-type');
     const eventDate = document.getElementById('event-date');
+    const eventTime = document.getElementById('event-time');
     const eventName = document.getElementById('event-name');
     const guestsRange = document.getElementById('guests-range');
     const guestsVal = document.getElementById('guests-val');
@@ -92,6 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryGuests = document.getElementById('summary-guests');
     const summaryDate = document.getElementById('summary-date');
     const summaryClient = document.getElementById('summary-client');
+    const calendarAlert = document.getElementById('calendar-alert');
+    const calendarAlertText = document.getElementById('calendar-alert-text');
+
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_b9mHlV4yvR4d255-t1L1mX9Fm-YOUR-SCRIPT-URL/exec'; // Reemplazar con la URL de la web app publicada
     const summaryServices = document.getElementById('summary-services-list');
     const summaryGifts = document.getElementById('summary-gifts-text');
     const btnAddToCart = document.getElementById('btn-add-to-cart');
@@ -194,7 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (summaryDate) {
-            summaryDate.textContent = eventDate.value ? eventDate.value : 'No seleccionada';
+            const timePart = eventTime && eventTime.value ? ` a las ${eventTime.value}` : '';
+            summaryDate.textContent = eventDate.value ? `${eventDate.value}${timePart}` : 'No seleccionada';
         }
         
         // Base Services List Builder
@@ -221,10 +227,60 @@ document.addEventListener('DOMContentLoaded', () => {
         summaryGifts.textContent = eventConfig[type].gift;
     }
 
+    // Live Availability Check from Google Calendar
+    async function checkCalendarAvailability() {
+        if (!eventDate.value || !eventTime.value) return;
+        
+        if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('YOUR-SCRIPT-URL')) {
+            console.log("Google Apps Script URL no configurada.");
+            return;
+        }
+
+        calendarAlert.classList.add('hidden');
+        btnAddToCart.disabled = true;
+        btnAddToCart.textContent = "Verificando disponibilidad...";
+
+        try {
+            const res = await fetch(`${APPS_SCRIPT_URL}?fecha=${eventDate.value}&hora=${eventTime.value}`);
+            const data = await res.json();
+            
+            if (data.disponible === false) {
+                calendarAlertText.textContent = `⚠️ El horario del ${eventDate.value} a las ${eventTime.value} ya está reservado. Por favor, elige otra hora/fecha.`;
+                calendarAlert.classList.remove('hidden');
+                btnAddToCart.textContent = "Fecha Ocupada";
+                btnAddToCart.style.opacity = "0.5";
+                btnAddToCart.style.pointerEvents = "none";
+            } else {
+                calendarAlert.classList.add('hidden');
+                btnAddToCart.disabled = false;
+                btnAddToCart.textContent = "Cotizar vía WhatsApp";
+                btnAddToCart.style.opacity = "1";
+                btnAddToCart.style.pointerEvents = "auto";
+            }
+        } catch (error) {
+            console.error("Error al verificar disponibilidad en Google Calendar:", error);
+            // Fallback en caso de fallos
+            calendarAlert.classList.add('hidden');
+            btnAddToCart.disabled = false;
+            btnAddToCart.textContent = "Cotizar vía WhatsApp";
+            btnAddToCart.style.opacity = "1";
+            btnAddToCart.style.pointerEvents = "auto";
+        }
+    }
+
     // Attach listeners for calculator updates
     eventSelect.addEventListener('change', updateCalculator);
     if (eventDate) {
-        eventDate.addEventListener('change', updateCalculator);
+        eventDate.addEventListener('change', () => {
+            updateCalculator();
+            checkCalendarAvailability();
+        });
+    }
+    if (eventTime) {
+        eventTime.addEventListener('change', () => {
+            updateCalculator();
+            checkCalendarAvailability();
+        });
     }
     if (eventName) {
         eventName.addEventListener('input', updateCalculator);
@@ -253,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = eventSelect.value;
             const guests = parseInt(guestsRange.value);
             const dateVal = eventDate && eventDate.value ? eventDate.value : 'Por definir';
+            const timeVal = eventTime && eventTime.value ? eventTime.value : '16:00';
             const clientName = eventName && eventName.value.trim() ? eventName.value.trim() : 'No provisto';
             
             let selectedAddonsList = [];
@@ -270,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           `• *Cliente:* ${clientName}\n` +
                           `• *Evento:* ${eventConfig[type].title}\n` +
                           `• *Invitados:* ${guests} personas\n` +
-                          `• *Fecha tentativa:* ${dateVal}\n` +
+                          `• *Fecha tentativa:* ${dateVal} a las ${timeVal}\n` +
                           `• *Sede:* Sede Campestre Santaella\n\n` +
                           `*Servicio Principal:*\n` +
                           `✓ Paquete Básico de ${eventConfig[type].title} (Incluye Obsequio Especial)\n`;
@@ -292,8 +349,39 @@ document.addEventListener('DOMContentLoaded', () => {
             securityModal.classList.add('active');
 
             // Setup confirmation action
-            const proceedWithWhatsApp = () => {
+            const proceedWithWhatsApp = async () => {
+                btnConfirmSecurity.disabled = true;
+                const originalBtnText = btnConfirmSecurity.textContent;
+                btnConfirmSecurity.textContent = "Registrando pre-reserva...";
+
+                // POST data to Google Apps Script to create tentative event
+                if (APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes('YOUR-SCRIPT-URL') && eventDate.value && eventTime.value) {
+                    try {
+                        const payload = {
+                            fecha: eventDate.value,
+                            hora: eventTime.value,
+                            cliente: clientName,
+                            evento: eventConfig[type].title,
+                            invitados: guests,
+                            adicionales: selectedAddonsList.join(', ')
+                        };
+
+                        await fetch(APPS_SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(payload)
+                        });
+                    } catch (error) {
+                        console.error("Error al registrar pre-reserva en Google Calendar:", error);
+                    }
+                }
+
                 securityModal.classList.remove('active');
+                btnConfirmSecurity.disabled = false;
+                btnConfirmSecurity.textContent = originalBtnText;
                 window.open(waURL, '_blank');
                 btnConfirmSecurity.removeEventListener('click', proceedWithWhatsApp);
             };

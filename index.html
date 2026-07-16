@@ -257,6 +257,16 @@
                     </div>
                     
                     <div class="control-group">
+                        <label for="event-time"><i class="fa fa-clock"></i> Hora Tentativa del Evento</label>
+                        <input type="time" id="event-time" class="form-select" style="color-scheme: dark;" value="16:00">
+                    </div>
+
+                    <div id="calendar-alert" class="calendar-alert hidden">
+                        <i class="fa fa-triangle-exclamation"></i>
+                        <span id="calendar-alert-text">Esta fecha y hora ya están reservadas en ese horario.</span>
+                    </div>
+                    
+                    <div class="control-group">
                         <label for="guests-range"><i class="fa fa-users"></i> Número de Invitados: <span id="guests-val">100</span></label>
                         <input type="range" id="guests-range" min="30" max="300" step="5" value="100" class="form-range">
                         <div class="range-labels">
