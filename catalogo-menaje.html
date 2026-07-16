@@ -1104,7 +1104,7 @@
             { name: "Cartones de Bingo (40 tableros y control manual)", price: 45000, cat: "diversion", icon: "fa-ticket" },
             { name: "Set fotográfico",               price: 180000,cat: "diversion",  icon: "fa-camera" },
             { name: "Luces led con cercha",          price: 200000,cat: "diversion",  icon: "fa-lightbulb" },
-            { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "diversion", icon: "fa-font" },
+            { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "diversion", icon: "fa-font", imageUrl: "assets/letras_luminosas.jpg" },
             { name: "Rx Recocha Exprés - Misión Sorpresa (Bolirana + Cilindros + Luces + Fondo)", price: 320000, cat: "diversion", icon: "fa-gamepad", isAnimatedFlyer: true }
         ];
 
@@ -1180,6 +1180,32 @@
                                 </div>
                                 <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
                                     <i class="fa fa-cart-plus"></i> Añadir Paquete
+                                </button>
+                            </div>`;
+                    } else if (item.imageUrl) {
+                        card.innerHTML = `
+                            <div style="width: 100%; height: 160px; overflow: hidden; border-radius: 8px 8px 0 0; background: #000; border-bottom: 2px solid var(--gold);">
+                                <img src="${item.imageUrl}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="card-top-content" style="padding-top: 10px;">
+                                <div class="card-info" style="margin-left: 0; width: 100%;">
+                                    <div class="card-category">${catLabels[item.cat]}</div>
+                                    <div class="card-name" style="margin-top: 5px;">${item.name}</div>
+                                </div>
+                                <div class="card-price" style="width: 100%; margin-top: 10px;">
+                                    <span class="price-label">Valor</span>
+                                    <div class="price-value">${formatPrice(item.price)}</div>
+                                    <span class="price-unit">/ unidad</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <div class="qty-input-wrapper">
+                                    <button type="button" onclick="changeInputValue(this, -1)">-</button>
+                                    <input type="number" min="1" value="1" class="item-qty-input" id="${inputId}">
+                                    <button type="button" onclick="changeInputValue(this, 1)">+</button>
+                                </div>
+                                <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
+                                    <i class="fa fa-cart-plus"></i> Añadir
                                 </button>
                             </div>`;
                     } else {
