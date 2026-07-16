@@ -103,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addonPirotecnia = document.getElementById('addon-pirotecnia');
     const addonCabina = document.getElementById('addon-cabina');
     const addonCuadro = document.getElementById('addon-cuadro');
+    const addonFoto = document.getElementById('addon-foto');
+    const addonMaquillaje = document.getElementById('addon-maquillaje');
 
     // Event Config mapping (pricing removed)
     const eventConfig = {
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "Bebidas frías ilimitadas durante todo el evento (Gaseosa, agua y hielo)",
                 "Elegante Mesa de snack y pasabocas gourmet para recepción",
                 "Servicio de meseros calificados y personal logístico de protocolo",
-                "Decoración premium de spaces con flores naturales y telas",
+                "Decoración premium de espacios con flores naturales y telas",
                 "OBSEQUIO ESPECIAL de Festejos Santaella"
             ]
         },
@@ -171,7 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
         mariachis: { name: "Show de Mariachis" },
         pirotecnia: { name: "Juegos Pirotécnicos" },
         cabina: { name: "Cabina de Fotos" },
-        cuadro: { name: "Cuadro de Entrada" }
+        cuadro: { name: "Cuadro de Entrada" },
+        foto: { name: "john book fotofrafia profesional" },
+        maquillaje: { name: "VANESSA MAKE UP maquillaje profesional" }
     };
 
     // calculateEventPrice removed as pricing is no longer calculated
@@ -210,6 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (addonPirotecnia.checked) listHTML += `<li><strong>Adicional:</strong> Show de Juegos Pirotécnicos en el cielo</li>`;
         if (addonCabina.checked) listHTML += `<li><strong>Adicional:</strong> Cabina de Fotos Profesional</li>`;
         if (addonCuadro.checked) listHTML += `<li><strong>Adicional:</strong> Cuadro de Entrada de Gala</li>`;
+        if (addonFoto.checked) listHTML += `<li><strong>Adicional:</strong> john book fotofrafia profesional</li>`;
+        if (addonMaquillaje.checked) listHTML += `<li><strong>Adicional:</strong> VANESSA MAKE UP maquillaje profesional</li>`;
         
         summaryServices.innerHTML = listHTML;
         summaryGifts.textContent = eventConfig[type].gift;
@@ -230,6 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     addonPirotecnia.addEventListener('change', updateCalculator);
     addonCabina.addEventListener('change', updateCalculator);
     addonCuadro.addEventListener('change', updateCalculator);
+    addonFoto.addEventListener('change', updateCalculator);
+    addonMaquillaje.addEventListener('change', updateCalculator);
 
     // Initial load of calculator
     updateCalculator();
@@ -251,6 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (addonPirotecnia.checked) selectedAddonsList.push("Show de Juegos Pirotécnicos");
             if (addonCabina.checked) selectedAddonsList.push("Cabina de Fotos Profesional");
             if (addonCuadro.checked) selectedAddonsList.push("Cuadro de Entrada de Gala");
+            if (addonFoto.checked) selectedAddonsList.push("john book fotofrafia profesional");
+            if (addonMaquillaje.checked) selectedAddonsList.push("VANESSA MAKE UP maquillaje profesional");
 
             let baseMsg = `*NUEVA COTIZACIÓN - Festejos Santaella*\n` +
                           `========================================\n\n` +
