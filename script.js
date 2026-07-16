@@ -243,9 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCalculator();
 
     // ==========================================================================
-    // 5. DIRECT WHATSAPP REDIRECTION (SIMULATOR CHECKOUT)
+    // 5. DIRECT WHATSAPP REDIRECTION (SIMULATOR CHECKOUT WITH SECURITY WARNING)
     // ==========================================================================
-    if (btnAddToCart) {
+    const securityModal = document.getElementById('security-modal');
+    const btnConfirmSecurity = document.getElementById('btn-confirm-security');
+
+    if (btnAddToCart && securityModal && btnConfirmSecurity) {
         btnAddToCart.addEventListener('click', () => {
             const type = eventSelect.value;
             const guests = parseInt(guestsRange.value);
@@ -269,8 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
                           `• *Invitados:* ${guests} personas\n` +
                           `• *Fecha tentativa:* ${dateVal}\n` +
                           `• *Sede:* Sede Campestre Santaella\n\n` +
-                          `⚠️ *AVISO DE SEGURIDAD IMPORTANTE:*\n` +
-                          `Todo anticipo, separación de fecha o pago de contrato se realiza ÚNICAMENTE de forma presencial en nuestra oficina. Festejos Santaella NO solicita consignaciones ni transferencias bancarias a través de WhatsApp ni canales digitales.\n\n` +
                           `*Servicio Principal:*\n` +
                           `✓ Paquete Básico de ${eventConfig[type].title} (Incluye Obsequio Especial)\n`;
 
@@ -286,7 +287,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const encodedMsg = encodeURIComponent(baseMsg);
             const waURL = `https://wa.me/573227580494?text=${encodedMsg}`;
-            window.open(waURL, '_blank');
+
+            // Show the modal
+            securityModal.classList.add('active');
+
+            // Setup confirmation action
+            const proceedWithWhatsApp = () => {
+                securityModal.classList.remove('active');
+                window.open(waURL, '_blank');
+                btnConfirmSecurity.removeEventListener('click', proceedWithWhatsApp);
+            };
+
+            btnConfirmSecurity.addEventListener('click', proceedWithWhatsApp);
+        });
+
+        // Close modal on clicking outside
+        securityModal.addEventListener('click', (e) => {
+            if (e.target === securityModal) {
+                securityModal.classList.remove('active');
+            }
         });
     }
 
