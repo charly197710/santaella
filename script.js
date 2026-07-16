@@ -252,8 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (addonCabina.checked) selectedAddonsList.push("Cabina de Fotos Profesional");
             if (addonCuadro.checked) selectedAddonsList.push("Cuadro de Entrada de Gala");
 
-            let baseServicesList = eventConfig[type].baseServices;
-
             let baseMsg = `*NUEVA COTIZACIÓN - Festejos Santaella*\n` +
                           `========================================\n\n` +
                           `• *Cliente:* ${clientName}\n` +
@@ -261,25 +259,18 @@ document.addEventListener('DOMContentLoaded', () => {
                           `• *Invitados:* ${guests} personas\n` +
                           `• *Fecha tentativa:* ${dateVal}\n` +
                           `• *Sede:* Sede Campestre Santaella\n\n` +
-                          `*Servicios Básicos Incluidos:*\n`;
-
-            baseServicesList.forEach(srv => {
-                baseMsg += `✓ ${srv}\n`;
-            });
+                          `*Servicio Principal:*\n` +
+                          `✓ Paquete Básico de ${eventConfig[type].title} (Incluye Obsequio Especial)\n`;
 
             if (selectedAddonsList.length > 0) {
-                baseMsg += `\n*Servicios Complementarios Seleccionados:*\n`;
+                baseMsg += `\n*Servicios Adicionales Seleccionados:*\n`;
                 selectedAddonsList.forEach(add => {
                     baseMsg += `✓ ${add}\n`;
                 });
-            } else {
-                baseMsg += `\n*Servicios Complementarios:* Ninguno\n`;
             }
 
-            baseMsg += `\n*Obsequios de la casa:*\n` +
-                       `✓ Obsequio Sorpresa de Festejos Santaella\n\n` +
-                       `========================================\n` +
-                       `Quedo a la espera de que el asesor humano me contacte para formalizar y coordinar la cita en Funza.`;
+            baseMsg += `\n========================================\n` +
+                       `Quedo a la espera de que el asesor humano me contacte para formalizar y coordinar la cita de manera presencial en la oficina de Funza.`;
 
             const encodedMsg = encodeURIComponent(baseMsg);
             const waURL = `https://wa.me/573227580494?text=${encodedMsg}`;
