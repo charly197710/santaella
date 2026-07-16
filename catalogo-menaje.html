@@ -745,6 +745,144 @@
             color: var(--vino-dark);
             box-shadow: 0 4px 12px rgba(212,175,106,0.3);
         }
+
+        /* ==========================================================================
+           SECURITY MODAL (ANTI-FRAUD POPUP)
+           ========================================================================== */
+        .security-modal {
+            display: none;
+            position: fixed;
+            z-index: 20000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .security-modal.active {
+            display: flex;
+        }
+
+        .security-modal-content {
+            background: rgba(18, 18, 18, 0.9);
+            border: 2px solid var(--gold);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 106, 0.2);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            animation: modalReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-light);
+        }
+
+        .security-modal-header {
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 106, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .security-modal-icon {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            animation: alertPulse 1s infinite alternate;
+        }
+
+        .security-modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: 1.6rem;
+            margin: 5px 0 0 0;
+            letter-spacing: 1px;
+        }
+
+        .security-modal-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .security-modal-body .warning-title {
+            color: #e74c3c;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .security-modal-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .security-modal-body li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .security-modal-body li i {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            font-size: 1.1rem;
+        }
+
+        .icon-red {
+            color: #e74c3c;
+        }
+
+        .icon-green {
+            color: #2ecc71;
+        }
+
+        .security-modal-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212, 175, 106, 0.1);
+        }
+
+        .security-modal-footer .btn-modal-confirm {
+            padding: 12px 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            background: rgba(212,175,106,0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .security-modal-footer .btn-modal-confirm:hover {
+            background: var(--gold);
+            color: var(--vino-dark);
+            box-shadow: 0 4px 12px rgba(212,175,106,0.3);
+        }
+
+        @keyframes modalReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes alertPulse {
+            from { transform: scale(1); filter: drop-shadow(0 0 2px rgba(231,76,60,0.5)); }
+            to { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(231,76,60,0.8)); }
+        }
     </style>
 </head>
 <body>
@@ -845,6 +983,28 @@
         <i class="fa fa-shopping-cart"></i>
         <span class="cart-badge" id="cart-badge">0</span>
     </button>
+
+    <!-- Modal de Advertencia de Seguridad Anti-Fraude -->
+    <div class="security-modal" id="security-modal">
+        <div class="security-modal-content card-glass">
+            <div class="security-modal-header">
+                <i class="fa fa-triangle-exclamation security-modal-icon"></i>
+                <h3>ADVERTENCIA DE SEGURIDAD</h3>
+            </div>
+            <div class="security-modal-body">
+                <p class="warning-title"><strong>Protección Contra Fraude y Clonación</strong></p>
+                <p>Para la seguridad de nuestros clientes, ten en cuenta:</p>
+                <ul>
+                    <li><i class="fa fa-circle-xmark icon-red"></i> <strong>NO</strong> solicitamos consignaciones ni transferencias bancarias virtuales.</li>
+                    <li><i class="fa fa-circle-xmark icon-red"></i> <strong>NO</strong> hagas pagos a números de cuenta indicados por WhatsApp o llamada.</li>
+                    <li><i class="fa fa-circle-check icon-green"></i> <strong>ÚNICAMENTE</strong> se reciben anticipos, abonos o firmas de contrato de forma <strong>presencial</strong> en nuestra oficina física en Funza (Carrera 13 N° 9 - 40, Segundo Piso).</li>
+                </ul>
+            </div>
+            <div class="security-modal-footer">
+                <button class="btn-modal-confirm" id="btn-confirm-security">Entendido y Continuar</button>
+            </div>
+        </div>
+    </div>
 
     <footer class="page-footer">
         <p>&copy; 2026 <a href="index.html">Festejos Santaella</a> · Funza, Cundinamarca · <a href="tel:3227580494">322 758 0494</a></p>
@@ -1134,6 +1294,9 @@
         document.getElementById('close-cart').addEventListener('click', closeCart);
         document.getElementById('cart-overlay').addEventListener('click', closeCart);
         
+        // Variable para guardar el mensaje de WhatsApp mientras se muestra el modal
+        let pendingWaMessage = null;
+
         document.getElementById('btn-send-order').addEventListener('click', () => {
             const itemNames = Object.keys(cart);
             if(itemNames.length === 0) return;
@@ -1159,7 +1322,26 @@
             message += `%0A*Total estimado: ${formatPrice(total)}*%0A%0A`;
             message += "Quedo atento a su confirmación y disponibilidad.";
             
-            window.open(`https://wa.me/573227580494?text=${message}`, '_blank');
+            // Guardar el mensaje y mostrar el modal de seguridad
+            pendingWaMessage = message;
+            document.getElementById('security-modal').classList.add('active');
+        });
+
+        // Cuando el usuario confirma la advertencia, redirige a WhatsApp
+        document.getElementById('btn-confirm-security').addEventListener('click', () => {
+            document.getElementById('security-modal').classList.remove('active');
+            if (pendingWaMessage) {
+                window.open(`https://wa.me/573227580494?text=${pendingWaMessage}`, '_blank');
+                pendingWaMessage = null;
+            }
+        });
+
+        // Cerrar modal haciendo clic fuera del contenido
+        document.getElementById('security-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('security-modal')) {
+                document.getElementById('security-modal').classList.remove('active');
+                pendingWaMessage = null;
+            }
         });
     </script>
 </body>
