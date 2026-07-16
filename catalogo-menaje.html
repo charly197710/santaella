@@ -851,6 +851,12 @@
         <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Creado por NEXARA IA STUDIO.</p>
     </footer>
 
+    <!-- Modal del Volante Rx Recocha Exprés -->
+    <div class="flyer-modal" id="flyer-modal" style="display: none; position: fixed; z-index: 30000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(8px); align-items: center; justify-content: center;">
+        <span class="flyer-close" id="flyer-close" style="position: absolute; top: 20px; right: 35px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 30001;">&times;</span>
+        <img class="flyer-content" id="flyer-img" src="assets/gallery/recocha_expres.jpg" alt="Volante Rx Recocha Exprés" style="margin: auto; display: block; max-width: 90%; max-height: 85%; object-fit: contain; border: 2px solid var(--gold); border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+    </div>
+
     <script>
         const items = [
             { name: "Plato LP",                     price: 500,   cat: "vajilla",    icon: "fa-circle" },
@@ -899,6 +905,9 @@
             { name: "Set fotográfico",               price: 180000,cat: "diversion",  icon: "fa-camera" },
             { name: "Luces led con cercha",          price: 200000,cat: "diversion",  icon: "fa-lightbulb" },
             { name: "Letras decorativas y números con bombillos (cada uno)", price: 55000, cat: "diversion", icon: "fa-font" },
+            { name: "Rx Recocha Exprés - Misión Sorpresa (Bolirana + Cilindros + Luces + Fondo)", price: 320000, cat: "diversion", icon: "fa-gamepad" },
+            { name: "Rx Recocha Exprés - Misión Recuerdo (Misión Sorpresa + Álbum fotos)", price: 450000, cat: "diversion", icon: "fa-camera" },
+            { name: "Rx Recocha Exprés - Volante Oficial", price: 0, cat: "diversion", icon: "fa-image", isFlyer: true },
         ];
 
         const catLabels = {
@@ -953,29 +962,50 @@
                     const safeName = item.name.replace(/'/g, "\\'");
                     const inputId = 'qty-' + item.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
 
-                    card.innerHTML = `
-                        <div class="card-top-content">
-                            <div class="card-icon"><i class="fa ${item.icon}"></i></div>
-                            <div class="card-info">
-                                <div class="card-category">${catLabels[item.cat]}</div>
-                                <div class="card-name">${item.name}</div>
+                    if (item.isFlyer) {
+                        card.innerHTML = `
+                            <div class="card-top-content">
+                                <div class="card-icon"><i class="fa ${item.icon}"></i></div>
+                                <div class="card-info">
+                                    <div class="card-category">${catLabels[item.cat]}</div>
+                                    <div class="card-name">${item.name}</div>
+                                </div>
+                                <div class="card-price">
+                                    <span class="price-label">Servicio</span>
+                                    <div class="price-value" style="font-size: 1.1rem; color: var(--gold);">Volante Oficial</div>
+                                    <span class="price-unit">Rx Recocha</span>
+                                </div>
                             </div>
-                            <div class="card-price">
-                                <span class="price-label">Valor</span>
-                                <div class="price-value">${formatPrice(item.price)}</div>
-                                <span class="price-unit">/ unidad</span>
+                            <div class="card-actions" style="justify-content: center;">
+                                <button class="btn-add-cart" onclick="viewFlyer()" style="width: 100%; justify-content: center; background: var(--gold); color: var(--vino-dark);">
+                                    <i class="fa fa-eye"></i> Ver Volante Completo
+                                </button>
+                            </div>`;
+                    } else {
+                        card.innerHTML = `
+                            <div class="card-top-content">
+                                <div class="card-icon"><i class="fa ${item.icon}"></i></div>
+                                <div class="card-info">
+                                    <div class="card-category">${catLabels[item.cat]}</div>
+                                    <div class="card-name">${item.name}</div>
+                                </div>
+                                <div class="card-price">
+                                    <span class="price-label">Valor</span>
+                                    <div class="price-value">${formatPrice(item.price)}</div>
+                                    <span class="price-unit">/ unidad</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-actions">
-                            <div class="qty-input-wrapper">
-                                <button type="button" onclick="changeInputValue(this, -1)">-</button>
-                                <input type="number" min="1" value="10" class="item-qty-input" id="${inputId}">
-                                <button type="button" onclick="changeInputValue(this, 1)">+</button>
-                            </div>
-                            <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
-                                <i class="fa fa-cart-plus"></i> Añadir
-                            </button>
-                        </div>`;
+                            <div class="card-actions">
+                                <div class="qty-input-wrapper">
+                                    <button type="button" onclick="changeInputValue(this, -1)">-</button>
+                                    <input type="number" min="1" value="10" class="item-qty-input" id="${inputId}">
+                                    <button type="button" onclick="changeInputValue(this, 1)">+</button>
+                                </div>
+                                <button class="btn-add-cart" onclick="addToCart('${safeName}', ${item.price}, '${inputId}')">
+                                    <i class="fa fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>`;
+                    }
                     grid.appendChild(card);
                 });
             });
@@ -983,6 +1013,26 @@
             document.getElementById('count-visible').textContent = filtered.length;
             document.getElementById('no-results').style.display = filtered.length === 0 ? 'block' : 'none';
         }
+
+        // Funciones del Modal para Ver Volante
+        function viewFlyer() {
+            const modal = document.getElementById('flyer-modal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFlyer() {
+            const modal = document.getElementById('flyer-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('flyer-close').addEventListener('click', closeFlyer);
+        document.getElementById('flyer-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('flyer-modal')) {
+                closeFlyer();
+            }
+        });
 
         function applyFilters() {
             const query  = document.getElementById('search-input').value.toLowerCase().trim();
