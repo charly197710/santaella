@@ -742,6 +742,27 @@ img {
     transform: scale(1.05);
 }
 
+/* Animación GIF para Flyer en tarjetas */
+@keyframes flyerFade {
+    0%, 45% { opacity: 1; }
+    55%, 95% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.service-card .flyer-img-container img.layer-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: flyerFade 3s infinite;
+}
+
+.service-card:hover .flyer-img-container img.layer-top {
+    transform: scale(1.05);
+}
+
 .service-tag-price {
     position: absolute;
     bottom: 15px;
