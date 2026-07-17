@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bodas: "✨ Nuestras **Bodas de Fantasía** se organizan en nuestra sede campestre. El plan básico incluye montaje de gala, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
         quince: "👑 Para **Quinceaños**, diseñamos noches mágicas en nuestra sede campestre. El plan básico incluye montaje de gala, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
         grados: "🎓 Organizamos **Grados, Proms y Eventos Empresariales**. El plan básico incluye montaje de gala en sede campestre, DJ & Maxi TK con hora loca, bebidas calientes, bebidas frías ilimitadas, mesa de snack y pasabocas, meseros, decoración y un OBSEQUIO ESPECIAL.",
-        seguridad: "⚠️ **AVISO IMPORTANTE DE SEGURIDAD:** Para proteger a nuestros clientes de fraudes y clonación de información, en Festejos Santaella **NUNCA** solicitamos transferencias bancarias, depósitos digitales o consignaciones. Cualquier abono, separación de fecha o pago de contrato se realiza **únicamente de forma presencial en nuestra oficina** (Carrera 13 N° 9 - 40, Segundo Piso, Funza). ¡No caigas en estafas!"
+        seguridad: "⚠️ **AVISO IMPORTANTE DE SEGURIDAD:** Para proteger a nuestros clientes de fraudes, **NO** enviamos números de cuenta por WhatsApp o llamada. **SÍ aceptamos pagos con tarjeta y transferencias**, pero los datos oficiales se entregan **únicamente de forma presencial en nuestra oficina** (Carrera 13 N° 9 - 40, Segundo Piso, Funza). ¡No caigas en estafas!"
     };
 
     function appendMessage(text, sender) {
