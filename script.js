@@ -397,6 +397,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Rx Recocha Exprés - Cotizar por WhatsApp directo (con modal de seguridad)
+    const btnRxRecoca = document.getElementById('btn-rx-recocha-wa');
+    if (btnRxRecoca) {
+        const secModal = document.getElementById('security-modal');
+        const btnConfirm = document.getElementById('btn-confirm-security');
+        const rxWaMsg = encodeURIComponent(
+            '¡Hola Festejos Santaella! 👋 Vi el paquete *Rx Recocha Exprés - Misión Sorpresa* en su página web y me interesa cotizarlo para mi evento.\n\nEl paquete incluye: Bolirana profesional, set de cilindros, luces LED y fondo personalizado ($320.000).\n\n¿Podrían darme más información sobre disponibilidad y condiciones?'
+        );
+        const rxWaURL = `https://wa.me/573227580494?text=${rxWaMsg}`;
+
+        btnRxRecoca.addEventListener('click', () => {
+            if (secModal) {
+                secModal.classList.add('active');
+                const proceed = () => {
+                    secModal.classList.remove('active');
+                    window.open(rxWaURL, '_blank');
+                    btnConfirm.removeEventListener('click', proceed);
+                };
+                btnConfirm.addEventListener('click', proceed);
+            } else {
+                window.open(rxWaURL, '_blank');
+            }
+        });
+    }
+
     // ==========================================================================
     // 6. SALES AND SERVICE CHATBOT (SANTAELLA AI)
     // ==========================================================================
