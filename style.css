@@ -51,6 +51,16 @@ body {
     color: var(--text-light);
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Prevents text selection globally */
+}
+
+/* Allow text selection in form inputs and textareas */
+input, textarea {
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 /* Scrollbar Customization */

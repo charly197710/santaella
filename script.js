@@ -753,4 +753,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initVisitorCounter();
 
+    // ==========================================================================
+    // ESCUDO ANTI-CLONACIÓN Y SEGURIDAD BÁSICA
+    // ==========================================================================
+    document.addEventListener('contextmenu', event => event.preventDefault()); // Bloquea clic derecho
+
+    document.addEventListener('keydown', (e) => {
+        // Bloquear F12
+        if (e.key === 'F12' || e.keyCode === 123) {
+            e.preventDefault();
+        }
+        // Bloquear Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+        if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || 
+            (e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C')))) {
+            e.preventDefault();
+        }
+    });
+
+    // Evitar arrastrar imágenes
+    document.addEventListener('dragstart', (e) => {
+        if (e.target.nodeName === 'IMG') {
+            e.preventDefault();
+        }
+    });
 });
