@@ -422,6 +422,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Header Cotizar WhatsApp Button
+    const headerWaBtn = document.querySelector('.cta-whatsapp-header');
+    if (headerWaBtn) {
+        headerWaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const waURL = headerWaBtn.getAttribute('href');
+            const secModal = document.getElementById('security-modal');
+            const btnConfirm = document.getElementById('btn-confirm-security');
+            
+            if (secModal && btnConfirm) {
+                secModal.classList.add('active');
+                const proceed = () => {
+                    secModal.classList.remove('active');
+                    window.open(waURL, '_blank');
+                    btnConfirm.removeEventListener('click', proceed);
+                };
+                btnConfirm.addEventListener('click', proceed);
+            } else {
+                window.open(waURL, '_blank');
+            }
+        });
+    }
+
+    // Chatbot "Hablar con un asesor real" Button
+    const chatTransferBtn = document.getElementById('chat-transfer-wa');
+    if (chatTransferBtn) {
+        chatTransferBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const waURL = chatTransferBtn.getAttribute('href');
+            const secModal = document.getElementById('security-modal');
+            const btnConfirm = document.getElementById('btn-confirm-security');
+            
+            if (secModal && btnConfirm) {
+                secModal.classList.add('active');
+                const proceed = () => {
+                    secModal.classList.remove('active');
+                    window.open(waURL, '_blank');
+                    btnConfirm.removeEventListener('click', proceed);
+                };
+                btnConfirm.addEventListener('click', proceed);
+            } else {
+                window.open(waURL, '_blank');
+            }
+        });
+    }
+
     // ==========================================================================
     // 6. SALES AND SERVICE CHATBOT (SANTAELLA AI)
     // ==========================================================================
