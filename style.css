@@ -749,13 +749,22 @@ img {
     100% { opacity: 1; }
 }
 
-.service-card .flyer-img-container img.layer-top {
+.service-card .flyer-img-container {
+    height: auto;
+    padding-top: 145%; /* Relación de aspecto para flyers */
+    background: #000;
+}
+
+.service-card .flyer-img-container img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Mostrar completo sin recortar */
+}
+
+.service-card .flyer-img-container img.layer-top {
     animation: flyerFade 3s infinite;
 }
 
