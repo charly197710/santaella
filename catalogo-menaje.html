@@ -43,6 +43,16 @@
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Prevents text selection globally */
+        }
+
+        /* Allow text selection in inputs and textareas */
+        input, textarea {
+            -webkit-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
 
         ::-webkit-scrollbar { width: 8px; }
