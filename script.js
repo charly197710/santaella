@@ -754,6 +754,117 @@ document.addEventListener('DOMContentLoaded', () => {
     initVisitorCounter();
 
     // ==========================================================================
+    // CLIENT EVENT GALLERY LOGIN & GOOGLE DRIVE INTEGRATION
+    // ==========================================================================
+    const clientLoginForm = document.getElementById('client-login-form');
+    const loginContainer = document.getElementById('client-login-container');
+    const driveContainer = document.getElementById('event-drive-container');
+    const errorMsgBox = document.getElementById('login-error-msg');
+    const errorMsgText = document.getElementById('login-error-text');
+    const btnSubmitLogin = document.getElementById('btn-login-submit');
+    const btnLogoutClient = document.getElementById('btn-logout-client');
+    const displayEventName = document.getElementById('display-event-name');
+    const btnOpenDriveDirect = document.getElementById('btn-open-drive-direct');
+    const driveFolderIframe = document.getElementById('drive-folder-iframe');
+
+    // Google Apps Script API WebApp URL (Fallback to direct validation if API is pending)
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID/exec'; 
+
+    function loadClientSession() {
+        const savedSession = sessionStorage.getItem('santaella_client_event');
+        if (savedSession) {
+            try {
+                const data = JSON.parse(savedSession);
+                showDriveGallery(data);
+            } catch(e) {
+                sessionStorage.removeItem('santaella_client_event');
+            }
+        }
+    }
+
+    function showDriveGallery(data) {
+        if (loginContainer) loginContainer.style.display = 'none';
+        if (driveContainer) driveContainer.style.display = 'block';
+
+        if (displayEventName) displayEventName.textContent = data.nombreEvento || 'Tu Evento';
+        if (btnOpenDriveDirect) btnOpenDriveDirect.href = data.driveUrl || '#';
+        
+        if (driveFolderIframe && data.folderId) {
+            // Google Drive Embedded View Format
+            driveFolderIframe.src = `https://drive.google.com/embeddedfolderview?id=${data.folderId}#grid`;
+        }
+    }
+
+    function hideDriveGallery() {
+        sessionStorage.removeItem('santaella_client_event');
+        if (driveContainer) driveContainer.style.display = 'none';
+        if (loginContainer) loginContainer.style.display = 'flex';
+        if (driveFolderIframe) driveFolderIframe.src = 'about:blank';
+        if (clientLoginForm) clientLoginForm.reset();
+        if (errorMsgBox) errorMsgBox.style.display = 'none';
+    }
+
+    if (clientLoginForm) {
+        clientLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('event-username').value.trim();
+            const password = document.getElementById('event-password').value.trim();
+
+            if (!username || !password) return;
+
+            if (errorMsgBox) errorMsgBox.style.display = 'none';
+            if (btnSubmitLogin) {
+                btnSubmitLogin.disabled = true;
+                btnSubmitLogin.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Verificando credenciales...';
+            }
+
+            // Intento de conexión con la API de Google Apps Script
+            fetch(`${APPS_SCRIPT_URL}?action=loginEvento&usuario=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        sessionStorage.setItem('santaella_client_event', JSON.stringify(data));
+                        showDriveGallery(data);
+                    } else {
+                        throw new Error(data.error || 'Credenciales incorrectas');
+                    }
+                })
+                .catch(err => {
+                    console.warn('API de Apps Script no conectada aún, usando validación local de prueba:', err);
+                    // Fallback de demostración instantáneo si aún no han enlazado la API
+                    const userClean = username.toLowerCase();
+                    if ((userClean === 'demo' || userClean === 'boda c&m' || userClean === 'santaella') && password === 'santaella2026') {
+                        const demoData = {
+                            success: true,
+                            nombreEvento: username.toUpperCase() + ' - Festejos Santaella',
+                            folderId: '1A2b3C4d5E6f7G8h9I0j',
+                            driveUrl: 'https://drive.google.com'
+                        };
+                        sessionStorage.setItem('santaella_client_event', JSON.stringify(demoData));
+                        showDriveGallery(demoData);
+                    } else {
+                        if (errorMsgBox && errorMsgText) {
+                            errorMsgText.textContent = err.message || 'Nombre de evento o contraseña incorrectos.';
+                            errorMsgBox.style.display = 'flex';
+                        }
+                    }
+                })
+                .finally(() => {
+                    if (btnSubmitLogin) {
+                        btnSubmitLogin.disabled = false;
+                        btnSubmitLogin.innerHTML = '<i class="fa fa-right-to-bracket"></i> Ingresar a mi Galería';
+                    }
+                });
+        });
+    }
+
+    if (btnLogoutClient) {
+        btnLogoutClient.addEventListener('click', hideDriveGallery);
+    }
+
+    loadClientSession();
+
+    // ==========================================================================
     // ESCUDO ANTI-CLONACIÓN Y SEGURIDAD BÁSICA
     // ==========================================================================
     document.addEventListener('contextmenu', event => event.preventDefault()); // Bloquea clic derecho
