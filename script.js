@@ -754,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initVisitorCounter();
 
     // ==========================================================================
-    // CLIENT EVENT GALLERY LOGIN & GOOGLE DRIVE INTEGRATION
+    // CLIENT EVENT GALLERY LOGIN - CSV GOOGLE SHEETS AUTHENTICATION
     // ==========================================================================
     const clientLoginForm = document.getElementById('client-login-form');
     const loginContainer = document.getElementById('client-login-container');
@@ -767,8 +767,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnOpenDriveDirect = document.getElementById('btn-open-drive-direct');
     const driveFolderIframe = document.getElementById('drive-folder-iframe');
 
-    // Google Apps Script API WebApp URL (Fallback to direct validation if API is pending)
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwiUF5Yaug2euBSylCRlENGMawWBAxjqmgC0ZG1svSa-9HFAFU5jPs5urqB9_9d1emv5g/exec'; 
+    // URLs CSV de las 10 pestañas publicadas de Google Sheets "Santaella-Eventos"
+    const CSV_SHEETS = [
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=0&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=1454014236&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=270219128&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=389889250&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=768102062&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=367132819&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=1872184067&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=460493527&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=1066664709&single=true&output=csv',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQvv6c2JFnoYiwxXlId7SYFOnJQaXmYANmGoo1HkRcyq5f_Dnjxd4BvD8pOdQ5TdxI07DrmwkTOPS4/pub?gid=793062354&single=true&output=csv'
+    ];
+
+    // Parsear texto CSV a array de filas
+    function parseCSV(text) {
+        return text.trim().split('\n').map(row =>
+            row.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''))
+        );
+    }
+
+    // Buscar usuario y contraseña en todos los CSVs
+    async function buscarEnCSVs(username, password) {
+        const userClean = username.trim().toLowerCase();
+        const passClean = password.trim();
+
+        for (let i = 0; i < CSV_SHEETS.length; i++) {
+            try {
+                const res = await fetch(CSV_SHEETS[i]);
+                if (!res.ok) continue;
+                const text = await res.text();
+                const rows = parseCSV(text);
+
+                // Fila 0 son los encabezados, buscar desde fila 1
+                for (let r = 1; r < rows.length; r++) {
+                    const rowUser = (rows[r][0] || '').trim().toLowerCase();
+                    const rowPass = (rows[r][1] || '').trim();
+                    const rowDrive = (rows[r][2] || '').trim();
+
+                    if (rowUser === userClean && rowPass === passClean && rowDrive) {
+                        // Extraer folder ID si es URL completa
+                        let folderId = rowDrive;
+                        if (rowDrive.includes('folders/')) {
+                            folderId = rowDrive.split('folders/')[1].split('?')[0].split('&')[0];
+                        } else if (rowDrive.includes('id=')) {
+                            folderId = rowDrive.split('id=')[1].split('&')[0];
+                        }
+
+                        return {
+                            success: true,
+                            nombreEvento: rows[r][0],
+                            folderId: folderId,
+                            driveUrl: rowDrive.startsWith('http') ? rowDrive : `https://drive.google.com/drive/folders/${folderId}`
+                        };
+                    }
+                }
+            } catch (err) {
+                console.warn(`Error leyendo CSV hoja ${i + 1}:`, err);
+            }
+        }
+        return null; // No encontrado en ninguna hoja
+    }
 
     function loadClientSession() {
         const savedSession = sessionStorage.getItem('santaella_client_event');
@@ -785,12 +845,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showDriveGallery(data) {
         if (loginContainer) loginContainer.style.display = 'none';
         if (driveContainer) driveContainer.style.display = 'block';
-
         if (displayEventName) displayEventName.textContent = data.nombreEvento || 'Tu Evento';
         if (btnOpenDriveDirect) btnOpenDriveDirect.href = data.driveUrl || '#';
-        
         if (driveFolderIframe && data.folderId) {
-            // Google Drive Embedded View Format
             driveFolderIframe.src = `https://drive.google.com/embeddedfolderview?id=${data.folderId}#grid`;
         }
     }
@@ -805,11 +862,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (clientLoginForm) {
-        clientLoginForm.addEventListener('submit', (e) => {
+        clientLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('event-username').value.trim();
             const password = document.getElementById('event-password').value.trim();
-
             if (!username || !password) return;
 
             if (errorMsgBox) errorMsgBox.style.display = 'none';
@@ -818,43 +874,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnSubmitLogin.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Verificando credenciales...';
             }
 
-            // Intento de conexión con la API de Google Apps Script
-            fetch(`${APPS_SCRIPT_URL}?action=loginEvento&usuario=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.success) {
-                        sessionStorage.setItem('santaella_client_event', JSON.stringify(data));
-                        showDriveGallery(data);
-                    } else {
-                        throw new Error(data.error || 'Credenciales incorrectas');
+            try {
+                const result = await buscarEnCSVs(username, password);
+                if (result) {
+                    sessionStorage.setItem('santaella_client_event', JSON.stringify(result));
+                    showDriveGallery(result);
+                } else {
+                    if (errorMsgBox && errorMsgText) {
+                        errorMsgText.textContent = 'Nombre de evento o contraseña incorrectos. Verifica con el administrador.';
+                        errorMsgBox.style.display = 'flex';
                     }
-                })
-                .catch(err => {
-                    console.warn('API de Apps Script no conectada aún, usando validación local de prueba:', err);
-                    // Fallback de demostración instantáneo si aún no han enlazado la API
-                    const userClean = username.toLowerCase();
-                    if ((userClean === 'demo' || userClean === 'boda c&m' || userClean === 'santaella') && password === 'santaella2026') {
-                        const demoData = {
-                            success: true,
-                            nombreEvento: username.toUpperCase() + ' - Festejos Santaella',
-                            folderId: '1A2b3C4d5E6f7G8h9I0j',
-                            driveUrl: 'https://drive.google.com'
-                        };
-                        sessionStorage.setItem('santaella_client_event', JSON.stringify(demoData));
-                        showDriveGallery(demoData);
-                    } else {
-                        if (errorMsgBox && errorMsgText) {
-                            errorMsgText.textContent = err.message || 'Nombre de evento o contraseña incorrectos.';
-                            errorMsgBox.style.display = 'flex';
-                        }
-                    }
-                })
-                .finally(() => {
-                    if (btnSubmitLogin) {
-                        btnSubmitLogin.disabled = false;
-                        btnSubmitLogin.innerHTML = '<i class="fa fa-right-to-bracket"></i> Ingresar a mi Galería';
-                    }
-                });
+                }
+            } catch (err) {
+                if (errorMsgBox && errorMsgText) {
+                    errorMsgText.textContent = 'Error de conexión. Inténtalo de nuevo en un momento.';
+                    errorMsgBox.style.display = 'flex';
+                }
+            } finally {
+                if (btnSubmitLogin) {
+                    btnSubmitLogin.disabled = false;
+                    btnSubmitLogin.innerHTML = '<i class="fa fa-right-to-bracket"></i> Ingresar a mi Galería';
+                }
+            }
         });
     }
 
