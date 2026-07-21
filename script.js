@@ -768,7 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const driveFolderIframe = document.getElementById('drive-folder-iframe');
 
     // Google Apps Script API WebApp URL (Fallback to direct validation if API is pending)
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID/exec'; 
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxG4HCGViQOjbEJHPjC-330BIMVQ-thD4yTZwSyxdRTZ6p20gTOigZ2zbITVQFonSkDlA/exec'; 
 
     function loadClientSession() {
         const savedSession = sessionStorage.getItem('santaella_client_event');
